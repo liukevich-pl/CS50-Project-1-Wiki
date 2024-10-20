@@ -1,0 +1,41 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ title }}</h1>
+    {% if data.msg != '' %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast fade show border-danger" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header bg-danger">
+            <strong class="me-auto text-white">Error</strong>
+            <button type="button" class="btn-close bg-white" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            {{ data.msg }}
+          </div>
+        </div>
+    </div>
+    {% endif %}
+    <form class="edit_form" method="post" action="{{ action.url }}">
+        {% csrf_token %}
+        {% if action.url == 'add' %}
+        <div>Title</div>
+        <input class="w-100 mb-3 py-1 px-2" type="text" name="title" value="{{ data.title }}">
+        {% else %}
+        <div>Title</div>
+        <div class="fw-bold mb-3">{{ data.title }}</div>
+        {% endif %}
+        <div>Content</div>
+        <textarea class="w-100 mb-3 p-2" name="content">{{ data.content }}</textarea>
+        <input class="btn btn-success me-3 px-5" type="submit" name="save" value="{{ action.btn }}">
+        {% if action.url == 'add' %}
+        <a class="btn btn-outline-dark px-5" href="{% url 'index' %}">Cancel</a>
+        {% else %}
+        <a class="btn btn-outline-dark px-5" href="{% url 'page' data.url %}">Cancel</a>
+        {% endif%}
+    </form>
+
+{% endblock %}
